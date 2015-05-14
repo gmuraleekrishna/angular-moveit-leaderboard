@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap.min.css">        
+        <link rel="stylesheet" href="css/materialize.min.css">
+        <link rel="stylesheet" href="css/moveit.css">
+
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    </head>
+    <body>
+        <div class="test-mode hidden">
+            <span>
+                Test Mode Enabled
+            </span>
+        </div>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" data-activates="mobile-demo" class="button-collapse burger-menu"><i class="mdi-navigation-menu"><span>Monthly Summary</span></i></a>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li><a href="timeline.html">Timeline</a></li>
+                    <li><a href="index.html">Add Entry</a></li>
+                    <li class="active"><a href="monthly_summary.html">Monthly Summary</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="timeline.html">Timeline</a></li>
+                    <li><a href="index.html">Add Entry</a></li>
+                    <li class="active"><a href="monthly_summary.html">Monthly Summary</a></li>
+                    <li><a href="leaderboard.html" >Leaderboard</a></li>
+                    <li><a href="settings.html" >Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="monthly-summary">
+            <div class="row">
+                <div class="loading-throbber col s12 center">
+                    <div class="preloader-wrapper small active">
+                        <div class="spinner-layer spinner-blue">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+
+                        <div class="spinner-layer spinner-red">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+
+                        <div class="spinner-layer spinner-yellow">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+
+                        <div class="spinner-layer spinner-green">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+        <div class="bottom-spacing">
+        </div>
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large waves-effect waves-light add-entry-btn"><i class="mdi-content-add"></i></a>
+        </div>
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/moveit.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script src="js/materialize.min.js"></script>
+        <script src="js/underscore.min.js"></script>
+        <script src="js/settings.js"></script>
+
+        <!-- Google Analytics -->
+        <script>
+         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+         ga('create', 'UA-5073218-11', 'auto');
+         ga('send', 'pageview');
+
+        </script>
+        <!-- End Google Analytics -->
+            
+        
+        <script>
+         $(document).on("resume", onResume, false);
+
+         function onResume(){
+             location.reload();
+         }
+         
+         $(function() {
+             $(".loading-throbber").show();
+             $(".button-collapse").sideNav();
+             
+             if(_.isEmpty(localStorage['userEmail'])){
+                 window.location = "login.html"
+             }
+             var start_date = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
+             var end_date = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
+
+             var data = {
+                 email: localStorage.userEmail,
+                 start_date: start_date,
+                 end_date: end_date
+             }
+             
+             $.ajax({
+                 dataType: 'json',
+                 url: settings.getSetting("apiUrl") + 'reports',
+                 type: 'GET',
+                 data: data,
+                 success: function(data, textStatus, jqXHR) {
+                     _.each(data, function(entry){
+                         entryHTML = '<div class="col s12 m12 item"><div class="card-panel teal center-align row "> <span class="date col s4 m4">'+ moment(entry.date).format("MMMM D") + '</span> <span class="duration col s4 m4">' + entry.duration + ' min</span> <span class="amount col s4 m4">Rs ' + entry.amount + '</span> </div> </div>'
+                         $('.monthly-summary > .row').append(entryHTML);
+                     });
+                     $(".loading-throbber").hide();
+                 },
+                 error: function() {
+                     alert('Opps Something Went Wrong!');
+                 },
+                 timeout: 100000
+             });
+             enableTestMode();
+         });
+         function enableTestMode(){
+             var settings = JSON.parse(localStorage.getItem("settings")) || {};
+             if(settings.mode === "test"){
+                 $(".test-mode").removeClass("hidden");
+             }
+         };
+        </script>
+    </body>
+</html>

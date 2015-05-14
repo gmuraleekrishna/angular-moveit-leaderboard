@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="leaderBoard">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+    <head>
+        <link rel="stylesheet" href="css/materialize.min.css">
+        <link rel="stylesheet" href="css/moveit.css">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    </head>
+    <body ng-controller="LeaderBoardController as leaderboardCtrl">
+        <div class="top-bar row">
+            <div class="top-bar-container">
+                <span class="logo col s2">
+                    <img src="img/logo.png" />
+                </span>
+                <span class="date-and-total col s10">
+                    <div class="date">
+                        {{ leaderboardCtrl.leaderboard.month }}
+                    </div>
+                    <div class="total-amount">
+                        <span>&#8377</span>
+                        <span class="value">
+                            {{ leaderboardCtrl.leaderboard.contributed_amount }}
+                        </span>
+                        <span class="goal-section">
+                            /
+                            <span>&#8377</span>
+                            <span class ="goal">
+                                {{ leaderboardCtrl.leaderboard.goal }}
+                            </span>
+                        </span>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class="container leaderboard">
+            <div class="row">
+                <ul class="collection">
+                    <user-list>
+                    </user-list>
+                </ul>
+            </div>
+        </div>
+        <div class="bottom-spacing">
+        </div>
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large waves-effect waves-light add-entry-btn"><i class="mdi-content-add"></i></a>
+        </div>
+        
+        <!-- Google Analytics -->        
+        <script src="js/settings.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        
+    </body>
+</html>

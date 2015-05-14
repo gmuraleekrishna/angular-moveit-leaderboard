@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/materialize.min.css">
+        <link rel="stylesheet" href="css/moveit.css">
+
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    </head>
+    <body class="index">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" data-activates="mobile-demo" class="button-collapse burger-menu"><i class="mdi-navigation-menu"><span>Settings</span></i></a>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li><a href="timeline.html">Timeline</a></li>
+                    <li><a href="index.html" >Add Entry</a></li>
+                    <li><a href="monthly_summary.html">Monthly Summary</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li class="active"><a href="settings.html">Settings</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="timeline.html">Timeline</a></li>
+                    <li><a href="index.html">Add Entry</a></li>
+                    <li><a href="monthly_summary.html">Monthly Summary</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li class="active"><a href="settings.html">Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <ul class="collection">
+                    <li class="collection-item avatar row">
+                        <!-- Switch -->
+                        <div class="switch">
+                            <label>
+                                <h6>Test Mode</h6>
+                            </label></br>
+                            <label>
+                                Off
+                                <input type="checkbox" class="setting" id="mode" data-on="test" data-off="production">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/moveit.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script src="js/materialize.min.js"></script>
+        <script src="js/underscore.min.js"></script>
+        <script src="js/settings.js"></script>
+
+        <script>
+         $(function() {
+             $(".button-collapse").sideNav();
+
+             if(_.isEmpty(localStorage['userEmail'])){
+                 window.location = "login.html";
+             }
+
+             $("input.setting").on("change", function(){
+                 var selector = $(this).is(":checked") ? "on" : "off";
+                 var value = $(this).data(selector);
+                 var name = this.id;
+                 setSetting(name, value);
+             });
+             
+             setToggles();
+         });
+
+         function getSetting(key){
+             var settings = JSON.parse(localStorage.getItem("settings")) || {};
+             return settings[key];
+         }
+
+         function setSetting(key, value){
+             var settings = JSON.parse(localStorage.getItem("settings")) || {};
+             settings[key] = value;
+             localStorage.setItem("settings", JSON.stringify(settings));
+         }
+
+         function setToggles(){
+             $("input.setting").each(function(i, elem){
+                 var settingType = elem.id;
+                 var availableSetting = getSetting(settingType);
+                 var availableSettings = $(elem).data();
+                 var state = getKey(availableSettings, availableSetting);
+                 if(state === "on"){
+                     elem.checked = true;
+                 }else{
+                     elem.checked = false;
+                 }
+             });
+         }
+
+         function getKey(object, value){
+             var _key = "";
+             for(var key in object){
+                 if(object[key] === value){
+                     _key = key;
+                 }
+             }
+             return _key;
+         }
+        </script>
+    </body>
+</html>

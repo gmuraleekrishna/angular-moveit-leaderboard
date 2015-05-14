@@ -1,0 +1,25 @@
+<div class="drag-items" ng-repeat="user in leaderboardCtrl.leaderboard.users">
+    <li class="collection-item row hidden interaction-message bumping">
+        <span>Bumping {{ user.name }}</span>
+    </li>
+    <li class="collection-item row hidden interaction-message nudgeing">
+        <span>Nudging {{ user.name }}</span>
+    </li>
+    <li class="collection-item avatar row  draggable-section indicator" ng-class="{ active-user:user.interactable == 'active' }" ng-click="leaderboardCtrl.interactWith(user)" >
+        <span class=" col s3"><img ng-src="{{user.gravatar}}" alt="" class="circle profile-pic"></span>
+        <span class="item-content">
+            <span class="count s2 col"># {{ $index + 1 }} </span>
+            <span class="title col s6" ng-click="leaderboardCtrl.showProfile(user)"> {{ user.name }} </span>
+            <span class="col s4 amount-section">
+                <div class="amount right-align">
+                    <span class="symbol">&#8377</span>
+                    {{ user.amount }}
+                </div>
+                <div class="duration right-align">
+                    {{ user.duration }} mins
+                </div>
+            </span>
+        </span>
+        </a>
+    </li>
+</div>
